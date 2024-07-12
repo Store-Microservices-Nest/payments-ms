@@ -2,7 +2,7 @@ import 'dotenv/config';
 import * as joi from 'joi';
 
 interface EnvVars {
-  PORT: number;
+  PAYMENTS_MS_PORT: number;
   STRIPE_SECRET: string;
   STRIPE_SUCCESS_URL: string;
   STRIPE_CANCEL_URL: string;
@@ -11,7 +11,7 @@ interface EnvVars {
 
 const envsSchema = joi
   .object({
-    PORT: joi.number().required(),
+    PAYMENTS_MS_PORT: joi.number().required(),
     STRIPE_SECRET: joi.string().required(),
     STRIPE_SUCCESS_URL: joi.string().required(),
     STRIPE_CANCEL_URL: joi.string().required(),
@@ -28,7 +28,7 @@ if (error) {
 const envVars: EnvVars = value;
 
 export const envs = {
-  port: envVars.PORT,
+  port: envVars.PAYMENTS_MS_PORT,
   stripeSecret: envVars.STRIPE_SECRET,
   stripeSuccessUrl: envVars.STRIPE_SUCCESS_URL,
   stripeCancelUrl: envVars.STRIPE_CANCEL_URL,
