@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { envs } from 'src/config';
 import Stripe from 'stripe';
 import { PaymentSessionDto } from './dto/payment-session.dto';
+import { Request, Response } from 'express';
 
 @Injectable()
 export class PaymentsService {
@@ -34,5 +35,28 @@ export class PaymentsService {
     });
 
     return session;
+  }
+
+  async stripeWebhook(req: Request, res: Response) {
+    const sig = req.headers['stripe-signature'];
+    // This is your Stripe CLI webhook secret for testing your endpoint locally.
+    const endpointSecret =
+      'whsec_ab3b3be96635b1e30ebeb496c4d4b3ba0a15c1a363a70b44a92517ccdc018e62';
+
+    let event: Stripe.Event;
+
+    try {
+      event = this.stripe.webhooks.constructEvent(
+        req['rawBody'],
+        sig,
+        endpointSecret,
+      );
+    } catch (err) {
+      res.status(400).send(`Webhook Error: ${err.message}`);
+      return;
+    }
+
+    console.log({ event });
+    return res.status(200).json({ sig });
   }
 }
