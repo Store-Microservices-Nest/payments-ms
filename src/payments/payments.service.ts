@@ -24,7 +24,6 @@ export class PaymentsService {
     });
 
     const session = await this.stripe.checkout.sessions.create({
-      // TODO: colocar id de orden
       payment_intent_data: {
         metadata: {
           orderId: orderId,
@@ -36,7 +35,11 @@ export class PaymentsService {
       cancel_url: envs.stripeCancelUrl,
     });
 
-    return session;
+    return {
+      cancelUrl: session.cancel_url,
+      successUrl: session.success_url,
+      url: session.url,
+    };
   }
 
   async stripeWebhook(req: Request, res: Response) {
